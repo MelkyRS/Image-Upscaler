@@ -439,18 +439,36 @@
                     // Convert file to base64
                     const base64 = await fileToBase64(file);
                     
-                    status.textContent = 'Processing with ESRGAN...';
+                    if (apiKey === 'demo') {
+                        status.textContent = 'Processing with demo upscaler...';
+                    } else {
+                        status.textContent = 'Processing with ESRGAN...';
+                    }
                     progressFill.style.width = '50%';
                     
-                    // Call Replicate API
+                    // Call appropriate upscaler
                     const result = await upscaleImage(base64, scale, apiKey);
                     
-                    status.textContent = 'Downloading result...';
+                    status.textContent = 'Finalizing...';
                     progressFill.style.width = '80%';
                     
-                    // Download the result
-                    const processedBlob = await fetch(result).then(r => r.blob());
-                    const processedUrl = URL.createObjectURL(processedBlob);
+                    // Handle result based on mode
+                    let processedUrl;
+                    let processedBlob;
+                    
+                    if (apiKey === 'demo') {
+                        // result is a data URL from canvas
+                        processedUrl = result;
+                        processedBlob = await dataURLtoBlob(result);
+                    } else {
+                        // result is a URL from Replicate API
+                        const response = await fetch(result);
+                        if (!response.ok) {
+                            throw new Error(`Failed to download result: ${response.status}`);
+                        }
+                        processedBlob = await response.blob();
+                        processedUrl = URL.createObjectURL(processedBlob);
+                    }
                     
                     processedImages.push({
                         original: file.name,
@@ -467,7 +485,7 @@
                     const downloadBtn = document.createElement('button');
                     downloadBtn.className = 'download-btn';
                     downloadBtn.textContent = 'Download';
-                    downloadBtn.onclick = () => downloadImage(processedUrl, file.name);
+                    downloadBtn.onclick = () => downloadImage(processedUrl, `upscaled_${file.name}`);
                     imageItem.querySelector('.image-info').appendChild(downloadBtn);
                     
                     progressFill.style.width = '100%';
@@ -475,10 +493,13 @@
                     
                 } catch (error) {
                     console.error('Error processing image:', error);
-                    status.textContent = 'Error occurred ❌';
+                    status.textContent = `Error: ${error.message} ❌`;
                     status.style.color = '#dc3545';
                     progressFill.style.background = '#dc3545';
                     progressFill.style.width = '100%';
+                    
+                    // Show error details in console for debugging
+                    console.log('Full error details:', error);
                 }
             }
             
@@ -491,114 +512,133 @@
         }
 
         async function upscaleImage(base64Image, scale, apiKey) {
-            // If no API key, use demo mode with canvas upscaling
-            if (!apiKey || apiKey === 'demo') {
-                return await demoUpscale(base64Image, scale);
-            }
-            
-            const response = await fetch('https://api.replicate.com/v1/predictions', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Token ${apiKey}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    version: "42fed1c4974146d4d2414e2be2c5277c7fcf05fcc972f6b188263b821efd3c6e",
-                    input: {
-                        image: base64Image,
-                        scale: parseInt(scale),
-                        face_enhance: false
-                    }
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const prediction = await response.json();
-            
-            // Poll for completion
-            let result = prediction;
-            while (result.status !== 'succeeded' && result.status !== 'failed') {
-                await new Promise(resolve => setTimeout(resolve, 1000));
+            try {
+                // If demo mode, use local canvas processing
+                if (!apiKey || apiKey === 'demo') {
+                    console.log('Using demo mode for upscaling...');
+                    return await demoUpscale(base64Image, scale);
+                }
                 
-                const pollResponse = await fetch(`https://api.replicate.com/v1/predictions/${result.id}`, {
+                // Use Replicate API for real ESRGAN
+                console.log('Using Replicate API for ESRGAN...');
+                const response = await fetch('https://api.replicate.com/v1/predictions', {
+                    method: 'POST',
                     headers: {
-                        'Authorization': `Token ${apiKey}`
-                    }
+                        'Authorization': `Token ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        version: "42fed1c4974146d4d2414e2be2c5277c7fcf05fcc972f6b188263b821efd3c6e",
+                        input: {
+                            image: base64Image,
+                            scale: parseInt(scale),
+                            face_enhance: false
+                        }
+                    })
                 });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+                }
+
+                const prediction = await response.json();
                 
-                result = await pollResponse.json();
+                // Poll for completion
+                let result = prediction;
+                while (result.status !== 'succeeded' && result.status !== 'failed') {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    const pollResponse = await fetch(`https://api.replicate.com/v1/predictions/${result.id}`, {
+                        headers: {
+                            'Authorization': `Token ${apiKey}`
+                        }
+                    });
+                    
+                    if (!pollResponse.ok) {
+                        throw new Error(`Polling failed: ${pollResponse.status}`);
+                    }
+                    
+                    result = await pollResponse.json();
+                }
+                
+                if (result.status === 'failed') {
+                    throw new Error(`ESRGAN processing failed: ${result.error || 'Unknown error'}`);
+                }
+                
+                return result.output;
+                
+            } catch (error) {
+                console.error('Upscale error:', error);
+                throw error;
             }
-            
-            if (result.status === 'failed') {
-                throw new Error('Image processing failed');
-            }
-            
-            return result.output;
         }
 
         // Demo upscaling using canvas (basic bicubic interpolation)
         async function demoUpscale(base64Image, scale) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
+            return new Promise((resolve, reject) => {
+                try {
+                    const img = new Image();
+                    img.onload = () => {
+                        try {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            
+                            const originalWidth = img.width;
+                            const originalHeight = img.height;
+                            const scaleNum = parseInt(scale);
+                            const newWidth = originalWidth * scaleNum;
+                            const newHeight = originalHeight * scaleNum;
+                            
+                            canvas.width = newWidth;
+                            canvas.height = newHeight;
+                            
+                            // Enable high quality scaling
+                            ctx.imageSmoothingEnabled = true;
+                            ctx.imageSmoothingQuality = 'high';
+                            
+                            // Draw upscaled image
+                            ctx.drawImage(img, 0, 0, newWidth, newHeight);
+                            
+                            // Convert to high quality PNG
+                            const result = canvas.toDataURL('image/png', 1.0);
+                            resolve(result);
+                        } catch (error) {
+                            reject(new Error(`Canvas processing failed: ${error.message}`));
+                        }
+                    };
                     
-                    const newWidth = img.width * parseInt(scale);
-                    const newHeight = img.height * parseInt(scale);
+                    img.onerror = () => {
+                        reject(new Error('Failed to load image for processing'));
+                    };
                     
-                    canvas.width = newWidth;
-                    canvas.height = newHeight;
-                    
-                    // Enable image smoothing for better quality
-                    ctx.imageSmoothingEnabled = true;
-                    ctx.imageSmoothingQuality = 'high';
-                    
-                    ctx.drawImage(img, 0, 0, newWidth, newHeight);
-                    
-                    // Add slight sharpening effect
-                    const imageData = ctx.getImageData(0, 0, newWidth, newHeight);
-                    const sharpened = sharpenImage(imageData);
-                    ctx.putImageData(sharpened, 0, 0);
-                    
-                    resolve(canvas.toDataURL('image/png'));
-                };
-                img.src = base64Image;
+                    img.src = base64Image;
+                } catch (error) {
+                    reject(new Error(`Demo upscale failed: ${error.message}`));
+                }
             });
         }
 
-        // Simple sharpening filter
-        function sharpenImage(imageData) {
-            const data = imageData.data;
-            const width = imageData.width;
-            const height = imageData.height;
-            const output = new Uint8ClampedArray(data);
-            
-            const kernel = [
-                0, -1, 0,
-                -1, 5, -1,
-                0, -1, 0
-            ];
-            
-            for (let y = 1; y < height - 1; y++) {
-                for (let x = 1; x < width - 1; x++) {
-                    for (let c = 0; c < 3; c++) {
-                        let sum = 0;
-                        for (let ky = -1; ky <= 1; ky++) {
-                            for (let kx = -1; kx <= 1; kx++) {
-                                const pos = ((y + ky) * width + (x + kx)) * 4 + c;
-                                sum += data[pos] * kernel[(ky + 1) * 3 + (kx + 1)];
-                            }
-                        }
-                        output[(y * width + x) * 4 + c] = Math.max(0, Math.min(255, sum));
-                    }
+
+
+        // Convert data URL to blob for downloading
+        async function dataURLtoBlob(dataURL) {
+            try {
+                const response = await fetch(dataURL);
+                const blob = await response.blob();
+                return blob;
+            } catch (error) {
+                console.error('dataURLtoBlob error:', error);
+                // Fallback method
+                const arr = dataURL.split(',');
+                const mime = arr[0].match(/:(.*?);/)[1];
+                const bstr = atob(arr[1]);
+                let n = bstr.length;
+                const u8arr = new Uint8Array(n);
+                while(n--){
+                    u8arr[n] = bstr.charCodeAt(n);
                 }
+                return new Blob([u8arr], {type: mime});
             }
-            
-            return new ImageData(output, width, height);
         }
 
         function fileToBase64(file) {
@@ -610,25 +650,49 @@
             });
         }
 
-        function downloadImage(url, originalName) {
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `upscaled_${originalName}`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+        function downloadImage(url, filename) {
+            try {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                // Clean up object URL if it's a blob URL
+                if (url.startsWith('blob:')) {
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                }
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('Download failed. Please try right-clicking the image and selecting "Save image as..."');
+            }
         }
 
         async function downloadAll() {
-            if (processedImages.length === 0) return;
+            if (processedImages.length === 0) {
+                alert('No processed images to download!');
+                return;
+            }
             
-            // Create ZIP file (simple implementation)
-            for (let i = 0; i < processedImages.length; i++) {
-                const img = processedImages[i];
-                downloadImage(img.processed, img.original);
+            try {
+                // Download each image with a small delay
+                for (let i = 0; i < processedImages.length; i++) {
+                    const img = processedImages[i];
+                    const filename = `upscaled_${img.original}`;
+                    downloadImage(img.processed, filename);
+                    
+                    // Add delay to avoid overwhelming the browser
+                    if (i < processedImages.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    }
+                }
                 
-                // Add small delay to avoid overwhelming the browser
-                await new Promise(resolve => setTimeout(resolve, 200));
+                alert(`Downloaded ${processedImages.length} images successfully!`);
+            } catch (error) {
+                console.error('Batch download error:', error);
+                alert('Some downloads may have failed. Please try downloading images individually.');
             }
         }
     </script>
