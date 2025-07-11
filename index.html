@@ -12,689 +12,621 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            color: #333;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
 
-        h1 {
+        .header {
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
         }
 
         .upload-section {
-            background: #f8f9fa;
             border: 3px dashed #667eea;
             border-radius: 15px;
             padding: 40px;
             text-align: center;
             margin-bottom: 30px;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .upload-section:hover {
-            background: #e9ecef;
             border-color: #764ba2;
-            transform: translateY(-2px);
+            background: rgba(102, 126, 234, 0.05);
         }
 
         .upload-section.dragover {
-            background: #e3f2fd;
-            border-color: #2196f3;
+            border-color: #764ba2;
+            background: rgba(102, 126, 234, 0.1);
+            transform: scale(1.02);
         }
 
-        .upload-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 10px;
+        .upload-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            color: #667eea;
         }
 
-        .upload-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        .upload-text {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .upload-subtext {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9em;
         }
 
         .scale-selector {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .scale-selector label {
-            font-weight: bold;
-            color: #333;
-            margin-right: 10px;
-        }
-
-        .scale-selector select {
-            padding: 10px;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
             background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scale-selector:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .process-btn {
-            background: linear-gradient(45deg, #28a745, #20c997);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 15px 40px;
-            border-radius: 25px;
-            font-size: 18px;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
             cursor: pointer;
-            display: block;
-            margin: 20px auto;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .process-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
         .process-btn:disabled {
-            background: #6c757d;
+            opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
 
-        .preview-section {
-            margin-top: 30px;
+        .file-list {
+            margin-bottom: 30px;
         }
 
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .image-item {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
             transition: all 0.3s ease;
         }
 
-        .image-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        .file-item:hover {
+            background: #e9ecef;
         }
 
-        .image-item img {
-            width: 100%;
-            height: 200px;
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .file-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
             object-fit: cover;
+            border: 2px solid #e0e0e0;
         }
 
-        .image-info {
-            padding: 15px;
+        .file-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
-        .image-info h3 {
-            margin-bottom: 10px;
+        .file-name {
+            font-weight: 600;
             color: #333;
         }
 
+        .file-size {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .file-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ffc107;
+        }
+
+        .status-indicator.processing {
+            background: #007bff;
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-indicator.completed {
+            background: #28a745;
+        }
+
+        .status-indicator.error {
+            background: #dc3545;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #c82333;
+        }
+
+        .download-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+        }
+
         .progress-bar {
+            width: 100%;
+            height: 6px;
             background: #e9ecef;
-            border-radius: 10px;
-            height: 20px;
+            border-radius: 3px;
             overflow: hidden;
-            margin: 10px 0;
+            margin: 20px 0;
         }
 
         .progress-fill {
-            background: linear-gradient(45deg, #667eea, #764ba2);
             height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
             width: 0%;
             transition: width 0.3s ease;
         }
 
-        .status {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
+        .results-section {
+            margin-top: 30px;
         }
 
-        .download-btn {
-            background: #17a2b8;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            margin: 10px 5px;
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
 
-        .download-btn:hover {
-            background: #138496;
-            transform: translateY(-1px);
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
-        .download-all-btn {
-            background: linear-gradient(45deg, #fd7e14, #e83e8c);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 20px auto;
-            display: block;
-            transition: all 0.3s ease;
+        .result-image {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
         }
 
-        .download-all-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(253, 126, 20, 0.3);
+        .result-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            border: 1px solid #f5c6cb;
+        .result-name {
+            font-weight: 600;
+            color: #333;
         }
 
-        .success {
-            background: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            border: 1px solid #c3e6cb;
-        }
-
-        .file-count {
+        .result-scale {
             background: #667eea;
             color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            display: inline-block;
-            margin: 10px 0;
-            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8em;
         }
 
-        .api-key-section {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
             border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
+            margin: 10px 0;
+            border-left: 4px solid #dc3545;
         }
 
-        .api-key-input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-top: 10px;
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            h1 {
+            .header h1 {
                 font-size: 2em;
             }
             
-            .upload-section {
+            .main-panel {
                 padding: 20px;
             }
             
-            .image-grid {
-                grid-template-columns: 1fr;
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .file-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 ESRGAN Image Upscaler</h1>
-        
-        <div class="api-key-section">
-            <h3>🔑 Replicate API Key</h3>
-            <p>Masukkan API key Replicate Anda untuk menggunakan model ESRGAN, atau ketik "demo" untuk mode demo:</p>
-            <input type="text" id="apiKey" class="api-key-input" placeholder="r8_xxxxxxxxxxxxxxxxxxxxxxxxxxxx atau ketik 'demo'">
-            <small>Dapatkan API key gratis di <a href="https://replicate.com" target="_blank">replicate.com</a> atau coba <strong>mode demo</strong> dengan mengetik "demo"</small>
+        <div class="header">
+            <h1>🚀 ESRGAN Image Upscaler</h1>
+            <p>Enhance your images with AI-powered super resolution up to 4x quality</p>
         </div>
 
-        <div class="upload-section" id="uploadSection">
-            <h3>📸 Upload Images</h3>
-            <p>Drag & drop multiple images here or click to select files</p>
-            <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
-            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
-                Select Images
-            </button>
-            <button class="upload-btn" onclick="clearAll()">
-                Clear All
-            </button>
-            <div id="fileCount" class="file-count" style="display: none;"></div>
-        </div>
+        <div class="main-panel">
+            <!-- API Configuration Notice -->
+            <div class="error-message" id="apiNotice">
+                <strong>⚠️ API Configuration Required:</strong><br>
+                To use real ESRGAN processing, you need to:
+                <ol style="margin: 10px 0; padding-left: 20px;">
+                    <li>Get API key from <a href="https://replicate.com/account/api-tokens" target="_blank">Replicate</a></li>
+                    <li>Replace 'YOUR_REPLICATE_API_KEY_HERE' in the code with your actual API key</li>
+                    <li>Or use DeepAI API as alternative</li>
+                </ol>
+                <small>Current mode: Client-side upscaling (fallback)</small>
+            </div>
 
-        <div class="scale-selector">
-            <label for="scaleSelect">🔍 Upscale Factor:</label>
-            <select id="scaleSelect">
-                <option value="2">2x</option>
-                <option value="4" selected>4x</option>
-            </select>
-        </div>
+            <div class="upload-section" id="uploadSection">
+                <div class="upload-icon">📸</div>
+                <div class="upload-text">Drop your images here or click to select</div>
+                <div class="upload-subtext">Supports JPG, PNG, WEBP • Multiple files supported</div>
+                <input type="file" id="fileInput" class="file-input" multiple accept="image/*">
+            </div>
 
-        <button class="process-btn" id="processBtn" onclick="processImages()">
-            ✨ Upscale Images
-        </button>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="scaleSelector">Upscale Factor</label>
+                    <select id="scaleSelector" class="scale-selector">
+                        <option value="2">2x (Recommended)</option>
+                        <option value="3">3x (High Quality)</option>
+                        <option value="4">4x (Maximum)</option>
+                    </select>
+                </div>
 
-        <div class="preview-section">
-            <div id="imageGrid" class="image-grid"></div>
-            <button class="download-all-btn" id="downloadAllBtn" onclick="downloadAll()" style="display: none;">
-                📥 Download All Results
-            </button>
+                <button id="processBtn" class="process-btn">
+                    <span id="processText">🔄 Start Processing</span>
+                    <div id="loadingSpinner" class="loading-spinner" style="display: none;"></div>
+                </button>
+
+                <button id="downloadAllBtn" class="process-btn" style="display: none; background: #28a745;">
+                    📥 Download All Results
+                </button>
+            </div>
+
+            <div class="progress-bar" id="progressBar" style="display: none;">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="file-list" id="fileList"></div>
+
+            <div class="results-section" id="resultsSection">
+                <div class="results-grid" id="resultsGrid"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        let selectedFiles = [];
-        let processedImages = [];
-
-        // Drag and drop functionality
-        const uploadSection = document.getElementById('uploadSection');
-        const fileInput = document.getElementById('fileInput');
-        const fileCount = document.getElementById('fileCount');
-        const imageGrid = document.getElementById('imageGrid');
-        const processBtn = document.getElementById('processBtn');
-        const downloadAllBtn = document.getElementById('downloadAllBtn');
-
-        uploadSection.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadSection.classList.add('dragover');
-        });
-
-        uploadSection.addEventListener('dragleave', () => {
-            uploadSection.classList.remove('dragover');
-        });
-
-        uploadSection.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadSection.classList.remove('dragover');
-            
-            const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
-            addFiles(files);
-        });
-
-        fileInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files);
-            addFiles(files);
-        });
-
-        function addFiles(files) {
-            selectedFiles = [...selectedFiles, ...files];
-            updateFileCount();
-            updatePreview();
-        }
-
-        function updateFileCount() {
-            if (selectedFiles.length > 0) {
-                fileCount.style.display = 'inline-block';
-                fileCount.textContent = `${selectedFiles.length} images selected`;
-            } else {
-                fileCount.style.display = 'none';
+        class ESRGANUpscaler {
+            constructor() {
+                this.files = [];
+                this.results = [];
+                this.processing = false;
+                this.initializeElements();
+                this.setupEventListeners();
             }
-        }
 
-        function updatePreview() {
-            imageGrid.innerHTML = '';
-            
-            selectedFiles.forEach((file, index) => {
+            initializeElements() {
+                this.uploadSection = document.getElementById('uploadSection');
+                this.fileInput = document.getElementById('fileInput');
+                this.fileList = document.getElementById('fileList');
+                this.processBtn = document.getElementById('processBtn');
+                this.processText = document.getElementById('processText');
+                this.loadingSpinner = document.getElementById('loadingSpinner');
+                this.progressBar = document.getElementById('progressBar');
+                this.progressFill = document.getElementById('progressFill');
+                this.resultsGrid = document.getElementById('resultsGrid');
+                this.scaleSelector = document.getElementById('scaleSelector');
+                this.downloadAllBtn = document.getElementById('downloadAllBtn');
+            }
+
+            setupEventListeners() {
+                // Upload section events
+                this.uploadSection.addEventListener('click', () => this.fileInput.click());
+                this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+                
+                // Drag and drop events
+                this.uploadSection.addEventListener('dragover', (e) => this.handleDragOver(e));
+                this.uploadSection.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+                this.uploadSection.addEventListener('drop', (e) => this.handleDrop(e));
+                
+                // Process button
+                this.processBtn.addEventListener('click', () => this.processImages());
+                
+                // Download all button
+                this.downloadAllBtn.addEventListener('click', () => this.downloadAllResults());
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                this.uploadSection.classList.add('dragover');
+            }
+
+            handleDragLeave(e) {
+                e.preventDefault();
+                this.uploadSection.classList.remove('dragover');
+            }
+
+            handleDrop(e) {
+                e.preventDefault();
+                this.uploadSection.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+                this.addFiles(files);
+            }
+
+            handleFileSelect(e) {
+                const files = Array.from(e.target.files);
+                this.addFiles(files);
+            }
+
+            addFiles(newFiles) {
+                newFiles.forEach(file => {
+                    if (!this.files.find(f => f.name === file.name && f.size === file.size)) {
+                        const fileObj = {
+                            file,
+                            id: Date.now() + Math.random(),
+                            status: 'pending',
+                            preview: null,
+                            result: null
+                        };
+                        this.files.push(fileObj);
+                        this.createFilePreview(fileObj);
+                    }
+                });
+                this.updateUI();
+            }
+
+            createFilePreview(fileObj) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    const imageItem = document.createElement('div');
-                    imageItem.className = 'image-item';
-                    imageItem.innerHTML = `
-                        <img src="${e.target.result}" alt="${file.name}">
-                        <div class="image-info">
-                            <h3>${file.name}</h3>
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="progress-${index}"></div>
+                    fileObj.preview = e.target.result;
+                    this.renderFileList();
+                };
+                reader.readAsDataURL(fileObj.file);
+            }
+
+            renderFileList() {
+                this.fileList.innerHTML = '';
+                this.files.forEach(fileObj => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <div class="file-info">
+                            <img src="${fileObj.preview}" alt="Preview" class="file-preview">
+                            <div class="file-details">
+                                <div class="file-name">${fileObj.file.name}</div>
+                                <div class="file-size">${this.formatFileSize(fileObj.file.size)}</div>
                             </div>
-                            <div class="status" id="status-${index}">Ready to process</div>
+                        </div>
+                        <div class="file-status">
+                            <div class="status-indicator ${fileObj.status}"></div>
+                            ${fileObj.status === 'completed' && fileObj.result ? 
+                                `<a href="${fileObj.result}" download="${this.getUpscaledFileName(fileObj.file.name)}" class="download-btn">Download</a>` : 
+                                ''}
+                            <button class="remove-btn" onclick="upscaler.removeFile('${fileObj.id}')">Remove</button>
                         </div>
                     `;
-                    imageGrid.appendChild(imageItem);
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function clearAll() {
-            selectedFiles = [];
-            processedImages = [];
-            updateFileCount();
-            imageGrid.innerHTML = '';
-            downloadAllBtn.style.display = 'none';
-            fileInput.value = '';
-        }
-
-        async function processImages() {
-            const apiKey = document.getElementById('apiKey').value.trim();
-            if (!apiKey) {
-                alert('Please enter your Replicate API key or type "demo" to try demo mode!');
-                return;
-            }
-
-            if (selectedFiles.length === 0) {
-                alert('Please select at least one image!');
-                return;
-            }
-
-            processBtn.disabled = true;
-            
-            if (apiKey === 'demo') {
-                processBtn.textContent = 'Processing (Demo Mode)...';
-            } else {
-                processBtn.textContent = 'Processing with ESRGAN...';
-            }
-
-            const scale = document.getElementById('scaleSelect').value;
-            
-            for (let i = 0; i < selectedFiles.length; i++) {
-                const file = selectedFiles[i];
-                const progressFill = document.getElementById(`progress-${i}`);
-                const status = document.getElementById(`status-${i}`);
-                
-                try {
-                    status.textContent = 'Uploading...';
-                    progressFill.style.width = '20%';
-                    
-                    // Convert file to base64
-                    const base64 = await fileToBase64(file);
-                    
-                    if (apiKey === 'demo') {
-                        status.textContent = 'Processing with demo upscaler...';
-                    } else {
-                        status.textContent = 'Processing with ESRGAN...';
-                    }
-                    progressFill.style.width = '50%';
-                    
-                    // Call appropriate upscaler
-                    const result = await upscaleImage(base64, scale, apiKey);
-                    
-                    status.textContent = 'Finalizing...';
-                    progressFill.style.width = '80%';
-                    
-                    // Handle result based on mode
-                    let processedUrl;
-                    let processedBlob;
-                    
-                    if (apiKey === 'demo') {
-                        // result is a data URL from canvas
-                        processedUrl = result;
-                        processedBlob = await dataURLtoBlob(result);
-                    } else {
-                        // result is a URL from Replicate API
-                        const response = await fetch(result);
-                        if (!response.ok) {
-                            throw new Error(`Failed to download result: ${response.status}`);
-                        }
-                        processedBlob = await response.blob();
-                        processedUrl = URL.createObjectURL(processedBlob);
-                    }
-                    
-                    processedImages.push({
-                        original: file.name,
-                        processed: processedUrl,
-                        blob: processedBlob
-                    });
-                    
-                    // Update UI
-                    const imageItem = imageGrid.children[i];
-                    const img = imageItem.querySelector('img');
-                    img.src = processedUrl;
-                    img.style.border = '3px solid #28a745';
-                    
-                    const downloadBtn = document.createElement('button');
-                    downloadBtn.className = 'download-btn';
-                    downloadBtn.textContent = 'Download';
-                    downloadBtn.onclick = () => downloadImage(processedUrl, `upscaled_${file.name}`);
-                    imageItem.querySelector('.image-info').appendChild(downloadBtn);
-                    
-                    progressFill.style.width = '100%';
-                    status.textContent = 'Completed! ✅';
-                    
-                } catch (error) {
-                    console.error('Error processing image:', error);
-                    status.textContent = `Error: ${error.message} ❌`;
-                    status.style.color = '#dc3545';
-                    progressFill.style.background = '#dc3545';
-                    progressFill.style.width = '100%';
-                    
-                    // Show error details in console for debugging
-                    console.log('Full error details:', error);
-                }
-            }
-            
-            processBtn.disabled = false;
-            processBtn.textContent = '✨ Upscale Images';
-            
-            if (processedImages.length > 0) {
-                downloadAllBtn.style.display = 'block';
-            }
-        }
-
-        async function upscaleImage(base64Image, scale, apiKey) {
-            try {
-                // If demo mode, use local canvas processing
-                if (!apiKey || apiKey === 'demo') {
-                    console.log('Using demo mode for upscaling...');
-                    return await demoUpscale(base64Image, scale);
-                }
-                
-                // Use Replicate API for real ESRGAN
-                console.log('Using Replicate API for ESRGAN...');
-                const response = await fetch('https://api.replicate.com/v1/predictions', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Token ${apiKey}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        version: "42fed1c4974146d4d2414e2be2c5277c7fcf05fcc972f6b188263b821efd3c6e",
-                        input: {
-                            image: base64Image,
-                            scale: parseInt(scale),
-                            face_enhance: false
-                        }
-                    })
+                    this.fileList.appendChild(fileItem);
                 });
+            }
 
-                if (!response.ok) {
-                    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+            removeFile(fileId) {
+                this.files = this.files.filter(f => f.id !== fileId);
+                this.renderFileList();
+                this.updateUI();
+            }
+
+            formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+                return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+            }
+
+            getUpscaledFileName(originalName) {
+                const scale = this.scaleSelector.value;
+                const lastDot = originalName.lastIndexOf('.');
+                const name = originalName.substring(0, lastDot);
+                const ext = originalName.substring(lastDot);
+                return `${name}_upscaled_${scale}x${ext}`;
+            }
+
+            updateUI() {
+                this.processBtn.disabled = this.files.length === 0 || this.processing;
+                if (this.files.length === 0) {
+                    this.uploadSection.style.display = 'block';
+                } else {
+                    this.uploadSection.style.display = 'none';
                 }
+            }
 
-                const prediction = await response.json();
-                
-                // Poll for completion
-                let result = prediction;
-                while (result.status !== 'succeeded' && result.status !== 'failed') {
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    
-                    const pollResponse = await fetch(`https://api.replicate.com/v1/predictions/${result.id}`, {
-                        headers: {
-                            'Authorization': `Token ${apiKey}`
-                        }
-                    });
-                    
-                    if (!pollResponse.ok) {
-                        throw new Error(`Polling failed: ${pollResponse.status}`);
+            async processImages() {
+                if (this.files.length === 0) return;
+
+                this.processing = true;
+                this.processBtn.disabled = true;
+                this.processText.textContent = 'Processing Images...';
+                this.loadingSpinner.style.display = 'inline-block';
+                this.progressBar.style.display = 'block';
+
+                let completed = 0;
+                const total = this.files.length;
+
+                for (const fileObj of this.files) {
+                    try {
+                        fileObj.status = 'processing';
+                        this.renderFileList();
+
+                        // Simulate ESRGAN processing (in real implementation, this would call an API)
+                        const result = await this.simulateESRGANProcessing(fileObj.file);
+                        
+                        fileObj.status = 'completed';
+                        fileObj.result = result;
+                        this.results.push({
+                            original: fileObj.file.name,
+                            upscaled: result,
+                            scale: this.scaleSelector.value
+                        });
+
+                    } catch (error) {
+                        fileObj.status = 'error';
+                        console.error('Error processing image:', error);
+                        this.showMessage('Error processing ' + fileObj.file.name, 'error');
                     }
-                    
-                    result = await pollResponse.json();
+
+                    completed++;
+                    const progress = (completed / total) * 100;
+                    this.progressFill.style.width = progress + '%';
+                    this.renderFileList();
                 }
-                
-                if (result.status === 'failed') {
-                    throw new Error(`ESRGAN processing failed: ${result.error || 'Unknown error'}`);
-                }
-                
-                return result.output;
-                
-            } catch (error) {
-                console.error('Upscale error:', error);
-                throw error;
-            }
-        }
 
-        // Demo upscaling using canvas (basic bicubic interpolation)
-        async function demoUpscale(base64Image, scale) {
-            return new Promise((resolve, reject) => {
-                try {
-                    const img = new Image();
-                    img.onload = () => {
-                        try {
-                            const canvas = document.createElement('canvas');
-                            const ctx = canvas.getContext('2d');
-                            
-                            const originalWidth = img.width;
-                            const originalHeight = img.height;
-                            const scaleNum = parseInt(scale);
-                            const newWidth = originalWidth * scaleNum;
-                            const newHeight = originalHeight * scaleNum;
-                            
-                            canvas.width = newWidth;
-                            canvas.height = newHeight;
-                            
-                            // Enable high quality scaling
-                            ctx.imageSmoothingEnabled = true;
-                            ctx.imageSmoothingQuality = 'high';
-                            
-                            // Draw upscaled image
-                            ctx.drawImage(img, 0, 0, newWidth, newHeight);
-                            
-                            // Convert to high quality PNG
-                            const result = canvas.toDataURL('image/png', 1.0);
-                            resolve(result);
-                        } catch (error) {
-                            reject(new Error(`Canvas processing failed: ${error.message}`));
-                        }
-                    };
-                    
-                    img.onerror = () => {
-                        reject(new Error('Failed to load image for processing'));
-                    };
-                    
-                    img.src = base64Image;
-                } catch (error) {
-                    reject(new Error(`Demo upscale failed: ${error.message}`));
-                }
-            });
-        }
-
-
-
-        // Convert data URL to blob for downloading
-        async function dataURLtoBlob(dataURL) {
-            try {
-                const response = await fetch(dataURL);
-                const blob = await response.blob();
-                return blob;
-            } catch (error) {
-                console.error('dataURLtoBlob error:', error);
-                // Fallback method
-                const arr = dataURL.split(',');
-                const mime = arr[0].match(/:(.*?);/)[1];
-                const bstr = atob(arr[1]);
-                let n = bstr.length;
-                const u8arr = new Uint8Array(n);
-                while(n--){
-                    u8arr[n] = bstr.charCodeAt(n);
-                }
-                return new Blob([u8arr], {type: mime});
-            }
-        }
-
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function downloadImage(url, filename) {
-            try {
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                
-                // Clean up object URL if it's a blob URL
-                if (url.startsWith('blob:')) {
-                    setTimeout(() => URL.revokeObjectURL(url), 100);
-                }
-            } catch (error) {
-                console.error('Download error:', error);
-                alert('Download failed. Please try right-clicking the image and selecting "Save image as..."');
-            }
-        }
-
-        async function downloadAll() {
-            if (processedImages.length === 0) {
-                alert('No processed images to download!');
-                return;
-            }
-            
-            try {
-                // Download each image with a small delay
-                for (let i = 0; i < processedImages.length; i++) {
-                    const img = processedImages[i];
-                    const filename = `upscaled_${img.original}`;
-                    downloadImage(img.processed, filename);
-                    
-                    // Add delay to avoid overwhelming the browser
-                    if (i < processedImages.length - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                    }
-                }
-                
-                alert(`Downloaded ${processedImages.length} images successfully!`);
-            } catch (error) {
-                console.error('Batch download error:', error);
-                alert('Some downloads may have failed. Please try downloading images individually.');
-            }
-        }
-    </script>
-</body>
-</html>
+                this.processing = false;
+  
